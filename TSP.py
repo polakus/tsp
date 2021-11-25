@@ -1,7 +1,8 @@
 from Grafo import Grafo
+import clsTxt from clsTxt
 
 class TSP(object):
-    def __init__(self, M: list, nroIntercambios, tenureADD, tenureDROP):
+    def __init__(self, M: list, nombreArchivo, solInicial, nroIntercambios, opt, tenureADD, tenureDROP, tiempoEjec, optimo):
         self._G = Grafo (M)
         self.__soluciones = []
         self.__nroIntercambios=nroIntercambios*2    #corresponde al nro de vertices los intercambios. 1intercambio => 2 vertices

@@ -1,60 +1,55 @@
-import sys
+# import sys
 import os
-import csv
-import re
+# import csv
+# import re
 import ntpath
 class clsTxt:
-    def __init__(self, nombreTxt, Carpeta, paralelismo, Subcarpeta):
-        if paralelismo != "paralelismo":
-            nombreTxt = nombreArchivo(nombreTxt)
-            Carpeta = Carpeta
-            print (re.findall(r"[0-9A-Za-z-]+.",nombreTxt))
-            nombreCarpeta = re.findall(r"[0-9A-Za-z-]+.",nombreTxt)[0]
+    # def __init__(self, nombreTxt, Carpeta, Subcarpeta):
+    #     direccion = Carpeta
+    #     if(not os.path.exists(Carpeta)):
+    #         os.mkdir(direccion)
+
+    #     direccion = direccion +"/"+Subcarpeta
+    #     if(not os.path.exists(direccion)):
+    #         os.mkdir(direccion)
             
-            if(os.path.exists(Carpeta)):
-                self.__carpeta = Carpeta
+    #     i = 0
+    #     if(os.path.exists(direccion+"/"+nombreTxt+".txt")):
+    #         while(os.path.exists(direccion+"/"+nombreTxt+ "("+str(i+1)+").txt")):
+    #             i += 1
+    #         self.__nombre = direccion+"/"+nombreTxt+ "("+str(i+1)+")"
+    #     else:
+    #         self.__nombre = direccion+"/"+nombreTxt
+        
+    #     self.__txt = open(str(self.__nombre)+".txt", "w")
+    #     self.__st = ""
+    #     self.__txt.close()
+
+    def __init__(self, nombreTxt):
+        self.__direccion = ""
+        directorios = nombreTxt.split(os.sep)
+        self.__nombre = directorios.pop(len(directorios)-1)
+        for dir in directorios:
+            if(not os.path.isdir(self.__direccion+dir)):
+                os.mkdir(self.__direccion+dir)
+                self.__direccion = self.__direccion + dir + "/"
             else:
-                os.mkdir(Carpeta)
-                self.__carpeta = Carpeta
-            
-            nombreCarpeta = self.__carpeta +"/"+nombreCarpeta
-            if(os.path.exists(nombreCarpeta)):
-                self.__nombre = "%s/%s" %(nombreCarpeta,nombreTxt)
-            else:
-                os.mkdir(nombreCarpeta)
-                self.__nombre = "%s/%s" %(nombreCarpeta,nombreTxt)    
-            i = 0
-            while os.path.exists("%s (%i).txt" %(self.__nombre ,i)):
+                self.__direccion = self.__direccion + dir + "/"
+
+        i = 1
+        if(os.path.exists(self.__direccion+self.__nombre)):
+            while(os.path.exists(self.__direccion+self.__nombre+ "("+str(i)+")")):
                 i += 1
-            self.__nombre = "%s (%i)" %(self.__nombre,i)
-            self.__txt = open(str(self.__nombre)+".txt", "w")
-        else:
-            if(os.path.exists(Carpeta)):
-                self.__carpeta = Carpeta
-            else:
-                os.mkdir(Carpeta)
-                self.__carpeta = Carpeta
+            self.__nombre = self.__nombre+ "("+str(i)+")"
 
-            nombreCarpeta = self.__carpeta +"/"+nombreTxt.split('_')[0]
-            if(os.path.exists(nombreCarpeta)):
-                self.__nombre = nombreCarpeta
-            else:
-                os.mkdir(nombreCarpeta)
-                self.__nombre = nombreCarpeta
-
-            nombreCarpeta = nombreCarpeta+"/"+Subcarpeta
-            if(os.path.exists(nombreCarpeta)):
-                self.__nombre = nombreCarpeta+"/"+nombreTxt
-            else:
-                os.mkdir(nombreCarpeta)
-                self.__nombre = nombreCarpeta+"/"+nombreTxt
-
-            
-            self.__txt = open(str(self.__nombre)+".txt", "w")
+        self.__nombre = self.__nombre
+        self.__txt = open(self.__direccion + self.__nombre, "w")
         self.__st = ""
+        self.__txt.close()
+
     
     def setTxtName(self, newname):
-        os.rename(self.__nombre+".txt", newname+".txt")
+        os.rename(self.__nombre, newname)
         self.__nombre = newname
 
     def getTxtName(self):
@@ -65,12 +60,13 @@ class clsTxt:
 
     def imprimir(self):
         try:
-            self.__txt = open(self.__nombre+".txt", "w")
+            self.__txt = open(self.__direccion + self.__nombre, "w")
             self.__txt.write(self.__st)
             self.__txt.close()
         except IOError:
             print ("No se pudo abrir el txt para imprimir")
     
-def nombreArchivo(path):
-    head, tail = ntpath.split(path)
-    return tail or ntpath.basename(head)
+    def nombreArchivo(self, path):
+        head, tail = ntpath.split(path)
+        print (ntpath.split(path))
+        return tail or ntpath.basename(head)

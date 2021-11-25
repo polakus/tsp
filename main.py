@@ -40,7 +40,6 @@ for coordRow in coordenadas:
     #print("Fila: "+str(fila))    
     matriz.append(fila)
 
-intercambios = 3
+problema = TSP(matriz, "ch130_prueba", "Vecino mas cercano", 3, "2-opt", 4,5, 5.0, optimo)
 
-problema = TSP(matriz, intercambios, optimo)
 problema.printG()
