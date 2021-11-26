@@ -2,7 +2,7 @@ import re
 import math
 from TSP import TSP
 
-pathArchivo = "/home/aledvs/unsa/LAS/TCIII/EXAMEN FINAL/codigo reutilizado/tabusearch/TSP-Tabu-Search/Instances/ch130.tsp"
+pathArchivo = "/home/aledvs/unsa/LAS/TCIII/EXAMEN FINAL/codigo reutilizado/tabusearch/TSP-Tabu-Search/Instances/dj38.tsp"
 archivo = open(pathArchivo,"r")
 lineas = archivo.readlines()
 try:
@@ -40,6 +40,6 @@ for coordRow in coordenadas:
     #print("Fila: "+str(fila))    
     matriz.append(fila)
 
-problema = TSP(matriz, "ch130_prueba", "Vecino mas cercano", 3, "2-opt", 4,5, 5.0, optimo)
+problema = TSP(matriz, "resultados/ch130_prueba", "Vecino mas cercano", 3, "2-opt", 4,5, 5.0, optimo)
 
-problema.printG()
+# problema.printG()

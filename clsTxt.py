@@ -43,7 +43,7 @@ class clsTxt:
             self.__nombre = self.__nombre+ "("+str(i)+")"
 
         self.__nombre = self.__nombre
-        self.__txt = open(self.__direccion + self.__nombre, "w")
+        self.__txt = open(str(self.__direccion + self.__nombre), "w")
         self.__st = ""
         self.__txt.close()
 
@@ -60,13 +60,13 @@ class clsTxt:
 
     def imprimir(self):
         try:
-            self.__txt = open(self.__direccion + self.__nombre, "w")
+            self.__txt = open(str(self.__direccion + self.__nombre), "w")
             self.__txt.write(self.__st)
             self.__txt.close()
         except IOError:
             print ("No se pudo abrir el txt para imprimir")
     
-    def nombreArchivo(self, path):
-        head, tail = ntpath.split(path)
-        print (ntpath.split(path))
-        return tail or ntpath.basename(head)
+    # def nombreArchivo(self, path):
+    #     head, tail = ntpath.split(path)
+    #     print (ntpath.split(path))
+    #     return tail or ntpath.basename(head)

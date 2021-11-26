@@ -167,11 +167,11 @@ class Grafo:
         costo = 0
         for j in range(0,len(self.getMatriz())):
             rV.append(Vertice(j+1))
-        
+
         for i in range(0,len(seq)-1):
             dist = self.getMatriz()[rV.index(seq[i])][rV.index(seq[i+1])] #Referencias en la matriz
             self.getA().append(Arista(seq[i], seq[i+1], dist))
-            costo+= dist
+            costo += dist
         self.__costoAsociado = costo + self.getMatriz()[rV.index(seq[len(seq)-1])][rV.index(seq[0])]
 
     def incrementaFrecuencia(self):
