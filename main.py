@@ -1,45 +1,45 @@
+import ftplib
+import os
 import re
-import math
+import tsplib95
 from TSP import TSP
 
-pathArchivo = "/home/aledvs/unsa/LAS/TCIII/EXAMEN FINAL/codigo reutilizado/tabusearch/TSP-Tabu-Search/Instances/dj38.tsp"
-archivo = open(pathArchivo,"r")
-lineas = archivo.readlines()
-try:
-    indSeccionCoord = lineas.index("NODE_COORD_SECTION\n")
-    lineaEOF = lineas.index("EOF\n")
-except:
-    print('No se encontró la línea "NODE_COORD_SECTION\\n" ó "EOF\\n"')
-lineaOptimo = [x for x in lineas[0:indSeccionCoord] if re.findall(r"OPTIMO:[\S 0-9]+",x)][0]
-optimo = float(re.findall(r"[0-9]+", lineaOptimo)[0])
-coordenadas = []
+ftp = ftplib.FTP("192.168.100.244", "ale368", "11ixjnph")
+ftp.encoding = "utf-8"
+filename = "gr17.tsp"
+ftp.cwd("/home/ale368/unsa/LAS/TCIII/EXAMEN FINAL/instancias/no euc")
+with open(filename, "wb") as file:
+    ftp.retrbinary(f"RETR {filename}", file.write)
 
-for i in range(indSeccionCoord+1, lineaEOF):
-    textoLinea = lineas[i]
-    textoLinea = re.sub("\n", "", textoLinea)
-    splitLinea = textoLinea.split(" ")
-    coordenadas.append([splitLinea[0],splitLinea[1],splitLinea[2]]) #[[v1,x1,y1], [v2,x2,y2], ...]
+with open(filename, "r") as input:
+    with open("temp", "w") as output:
+        for line in input:
+            if "OPTIMO" not in line.strip("\n"):
+                output.write(line)
+            else:
+                optimo = float(re.findall(r"[0-9]+", line)[0])
 
-matriz = []
-#Arma la matriz de distancias. Calculo la distancia euclidea
-for coordRow in coordenadas:
-    fila = []            
-    for coordCol in coordenadas:
-        x1 = float(coordRow[1])
-        y1 = float(coordRow[2])
-        x2 = float(coordCol[1])
-        y2 = float(coordCol[2])
-        # dist = self.distancia(x1,y1,x2,y2)
-        dist = round(math.sqrt((x1-x2)**2+(y1-y2)**2),3)
-        
-        #Para el primer caso. Calculando la distancia euclidea entre si mismo da 0
-        if(dist == 0):
-            dist = 999999999999 #El modelo no debería tener en cuenta a las diagonal, pero por las dudas
-        fila.append(dist)
+os.replace('temp', filename)
 
-    #print("Fila: "+str(fila))    
-    matriz.append(fila)
+file.close()
 
-problema = TSP(matriz, "resultados/ch130_prueba", "Vecino mas cercano", 3, "2-opt", 4,5, 5.0, optimo)
+problem = tsplib95.load('/home/aledvs/unsa/LAS/TCIII/EXAMEN FINAL/tsp final/' + filename)
 
-# problema.printG()
+def lee(problem, filename):
+    matriz = []
+    for i in range(problem.dimension):
+        columna = []
+        for j in range(problem.dimension):
+            if(problem.get_weight(i,j)==0):
+                # print(problem.get_weight(i,j))
+                columna.append(float(999999999999))
+            else:
+                # print(problem.get_weight(i,j))
+                columna.append(float(problem.get_weight(i,j)))
+        matriz.append(columna)
+    os.remove(filename)
+    return matriz
+
+matriz = lee(problem, filename)
+
+# problema = TSP(matriz, "resultados/ch130_prueba", "Vecino mas cercano", 3, "2-opt", 4,5, 5.0, optimo)

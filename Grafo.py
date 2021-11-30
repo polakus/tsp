@@ -142,11 +142,11 @@ class Grafo:
                 salida.append(arista)
         return salida
     
-    #Cargar las aristas
+    #Cargar los vérticees y las aristas
     def cargarDesdeMatriz(self, Matriz):
-        for fila in range(0,len(Matriz)):
+        for fila in range(0,len(Matriz)): #carga vértices
             self._V.append(Vertice(fila+1))    #V = [1,2,3,4,5]; V=[1,3,4] A=[(1,3)(3,4)] => sol 1->3->4->5->2
-        for fila in range(0,len(Matriz)):
+        for fila in range(0,len(Matriz)): #carga aristas
             for columna in range(0, len(Matriz[fila])):
                 aux = Arista(self._V[fila],self._V[columna],(Matriz[fila][columna]))
                 self._A.append(aux)

@@ -56,6 +56,7 @@ class TSP(object):
             recorrido.append(Vertice(masCercano+1))
             visitados.append(masCercano)
         return recorrido
+
     def incrementaFrecuencia(self, sol):
         for x in sol.getA():
             origen = int(x.getOrigen().getValue()-1)
@@ -279,9 +280,9 @@ class TSP(object):
                             nroIntercambios = 2
                             print("Aplicamos movimientos 2-opt")
 
-                    #Obtengo 2/3 de lo que resta de tiempo, para que la proxima vez ingrese en menor tiempo cuando no hay mejoria
-                    #solo en caso de que el tiempo restante sea menor al tiempo MaxNoMejora, ya que si no, no habra una proxima
-                    #vez en que se estanque
+                    #Obtengo 2/3 de lo que resta de tiempo, para que la proxima vez ingrese en menor 
+                    # tiempo cuando no hay mejoria solo en caso de que el tiempo restante sea menor 
+                    # al tiempo MaxNoMejora, ya que si no, no habra una proxima vez en que se estanque
                     if(tiempoRestante < tiempoMaxNoMejora and not cond_3opt):
                         tiempoMaxNoMejora = tiempoRestante*2/3
                     elif(tiempoMaxNoMejora > 15 and not cond_3opt):   #Mayor que 10seg
