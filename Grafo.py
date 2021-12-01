@@ -1,8 +1,5 @@
 from Vertice import Vertice
 from Arista import Arista
-import sys
-import re
-import math 
 import copy
 
 class Grafo:
@@ -126,7 +123,8 @@ class Grafo:
         return salida
     
     def __repr__(self):
-        return str(self.getV) 
+        return str(self.getV)
+
     def aristasConOrigen(self, V):
         salida = []
         for arista in self.getA():

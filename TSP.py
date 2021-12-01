@@ -34,7 +34,7 @@ class TSP(object):
     
         for i in range(0, len(matrizDist)):
             costo = matrizDist[pos][i]
-            if(costo<masCercano and i not in visitados):
+            if(costo < masCercano and i not in visitados):
                 masCercano = costo
                 indMasCercano = i
         
