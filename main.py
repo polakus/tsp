@@ -1,6 +1,7 @@
 import ftplib
 import os
 import re
+import math
 import tsplib95
 from TSP import TSP
 # from TabuSearch import TabuSearch
@@ -73,7 +74,17 @@ for instancia in instancias:
     tam = problem.dimension
     matriz = leeInstancia(problem)
     os.remove(os.path.join(dir_local,instancia))
-    print(f"ya leyó la instancia: {instancia}")
-    TSP(matriz, f"resultados/{instancia}", "Vecino mas cercano", 3, "2-opt", 4,5, float(tam/4), optimo)
+    print(f"ya leyó la instancia: {instancia}\nSe ejecutará {tam**(1/3)} y la instancia es de {tam} vertices")
+    TSP(matriz, f"resultados/{instancia}.rdos", "Vecino mas cercano", 3, "2-opt", 4,5, tam**(1/3), optimo)
+# optimo = extraeOpt(dir_local,"att48.tsp")
+# problem = tsplib95.load(os.path.join(dir_local, "att48.tsp"))
+# tam = problem.dimension
+# matriz = leeInstancia(problem)
+# print(matriz)
+# os.remove(os.path.join(dir_local,"att48.tsp"))
+# print(f"ya leyó la instancia: att48.tsp\nSe ejecutará {tam**(1/3)} y la instancia es de {tam} vertices")
+# TSP(matriz, f"resultados/att48.tsp.rdos", "Vecino mas cercano", 3, "2-opt", 4,5, tam**(1/3), optimo)
+
+
 
 # problema = TabuSearch(matriz, "resultados/ch130_prueba", "Vecino mas cercano", 3, "2-opt", 4,5, 5.0, optimo)
