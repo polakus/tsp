@@ -104,23 +104,19 @@ class TSP(object):
         lista_Frecuentados = lista_tabu
         vertADD = None
         vertDROP = None
-
         #Me fijo si "esta llena" la lista tabu, tal que permita realizar los intercambios que se indicaron
         longitud =  len(Sol_Optima.getV()) - len(lista_tabu)    #Longitud de los permitidos
         longitud -= (4 +1)     #Verifico si hay suficiente permitidos para agregar a la lista tabu, sin contar el V(1)
-        
         #print("Lista tabu antes: "+str(lista_tabu))
         #Verifico que se cumpla las condiciones con respecto a longitudes
         if(longitud>=0):
             mayFrecuencia = -1
-            
             #Recorro las aristas de la ultima solucion optima obtenida
             for a in aristasSol:
                 vert_Origen = a.getOrigen()
                 vert_Destino = a.getDestino()
                 frec_Actual = self.__frecMatriz[vert_Origen.getValue()-1][vert_Destino.getValue()-1]
                 pertenece = self.pertenListaTabu_TSF(vert_Origen, vert_Destino, lista_tabu)
-                
                 if(frec_Actual > mayFrecuencia and not pertenece):
                     mayFrecuencia = frec_Actual
                     vertADD = vert_Origen
@@ -131,13 +127,10 @@ class TSP(object):
                 #print("vertADD: "+str(vertADD)+"    vertDROP: "+str(vertDROP)+ "       Max Frecuencia: "+str(mayFrecuencia))
                 #print("Lista tabu ahora: "+str(lista_Frecuentados))
                 return lista_Frecuentados
-        
         #Si no se cumple, tengo la lista tabu "llena"
         #Elimino una cantidad suficiente de la lista Tabu para que permita realizar los intercambios
         lista_Frecuentados = self.borraFrecuentados(lista_tabu)
-        
         #print("Lista tabu ahora: "+str(lista_Frecuentados))
-        
         return lista_Frecuentados
 
     #Devuelve los frecuentados
@@ -290,7 +283,8 @@ class TSP(object):
 
                     tiempoIniEstancamiento=time()    #Reiniciamos el tiempo de No mejora
                     
-                ######### Tabu Search Granular ##########                
+                ######### Tabu Search Granular ##########
+                
                 if(cond_3opt):
                     #3-opt
                     ind_random = random.sample(range(0,len(lista_permit)),1)

@@ -1,4 +1,4 @@
-class Vertice():
+class Vertice(object):
 
     def __init__(self,V):
         self._value = V

@@ -1,4 +1,4 @@
-class Tabu:
+class Tabu(object):
     def __init__(self, E, T):
         self.__elemento = E 
         self.__tenure = T

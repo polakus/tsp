@@ -1,6 +1,6 @@
 from Vertice import Vertice
 
-class Arista():
+class Arista(object):
     def __init__(self,origen,destino, peso):
         self._origen = origen
         self._destino = destino
@@ -37,8 +37,11 @@ class Arista():
     def tieneDestino(self,V):
         return (V == self.getDestino())
 
+    def mismoVertice(self, A):
+        return (self._origen == A.getOrigen() or self._origen == A.getDestino() or self._destino == A.getOrigen() or self._destino == A.getDestino())
+
     def __eq__(self, A):
-        return ((self.getOrigen() == A.getOrigen()) & (self.getDestino() == A.getDestino()) & (self.getPeso() == A.getPeso()))
+        return ((self.getOrigen() == A.getOrigen()) and (self.getDestino() == A.getDestino()) or ((self.getDestino() == A.getOrigen()) and (self.getOrigen() == A.getDestino())))
 
     def __str__(self):
         return "(" + str(self._origen) + "," + str(self._destino) + "," + str(self._peso) + ")"

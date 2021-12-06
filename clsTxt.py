@@ -4,27 +4,6 @@ import os
 # import re
 import ntpath
 class clsTxt:
-    # def __init__(self, nombreTxt, Carpeta, Subcarpeta):
-    #     direccion = Carpeta
-    #     if(not os.path.exists(Carpeta)):
-    #         os.mkdir(direccion)
-
-    #     direccion = direccion +"/"+Subcarpeta
-    #     if(not os.path.exists(direccion)):
-    #         os.mkdir(direccion)
-            
-    #     i = 0
-    #     if(os.path.exists(direccion+"/"+nombreTxt+".txt")):
-    #         while(os.path.exists(direccion+"/"+nombreTxt+ "("+str(i+1)+").txt")):
-    #             i += 1
-    #         self.__nombre = direccion+"/"+nombreTxt+ "("+str(i+1)+")"
-    #     else:
-    #         self.__nombre = direccion+"/"+nombreTxt
-        
-    #     self.__txt = open(str(self.__nombre)+".txt", "w")
-    #     self.__st = ""
-    #     self.__txt.close()
-
     def __init__(self, nombreTxt):
         self.__direccion = ""
         directorios = nombreTxt.split(os.sep)
@@ -35,7 +14,6 @@ class clsTxt:
                 self.__direccion = self.__direccion + dir + "/"
             else:
                 self.__direccion = self.__direccion + dir + "/"
-
         i = 1
         if(os.path.exists(self.__direccion+self.__nombre)):
             while(os.path.exists(self.__direccion+self.__nombre+ "("+str(i)+")")):

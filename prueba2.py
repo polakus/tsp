@@ -1,100 +1,42 @@
-# import networkx as nx
-# import numpy as np
-# import string
-# import os
+# import time
 
-# dt = [('len', float)]
-# A = np.array([(0, 0.3, 0.4, 0.7),
-#                (0.3, 0, 0.9, 0.2),
-#                (0.4, 0.9, 0, 0.1),
-#                (0.7, 0.2, 0.1, 0)
-#                ])*10
-# A = A.view(dt)
-# print(A)
+# d = dict()
+# # print(type(d))
+# for i in range(100000):
+#     d[(i,i+1)]=i*i
+# acud = 0
+# for key in d:
+#     acud += d[key]
+# # print(f"rdo: {6001,6002},{d[(6001,6002)]}")
+# ini = time.time()
+# print(acud)
+# print(f"tiempo diccionario: {time.time()-ini}. len: {len(d)}")
+# #######################################################################
+# l = list()
+# # print(type(l))
+# for i in range(100000):
+#     l.append((i,i+1,i*i))
+# acul = 0
+# for i in range(100000):
+#     acul += l[i][2]
+# pos = -1
+# for i in range(100000):
+#     if l[i][0]==6001 and l[i][1]==6002:
+#         pos = i
+# # print(f"rdo: {l[pos]}")
+# ini = time.time()
+# print(acul)
+# print(f"tiempo lista: {time.time()-ini}. len: {len(l)}")
+from Arista import Arista
+from Vertice import Vertice
+from Tabu import Tabu
 
-# G = nx.from_numpy_matrix(A)
-# print(string.ascii_uppercase)
-# print(G.edges())
-# print(range(len(G.nodes())))
-# print(zip(range(len(G.nodes())),string.ascii_uppercase))
-# print(dict(zip(range(len(G.nodes())),string.ascii_uppercase)))
-# G = nx.relabel_nodes(G, dict(zip(range(len(G.nodes())),string.ascii_uppercase)))    
-# G = nx.drawing.nx_agraph.to_agraph(G)
-# print(G)
+a = Arista(Vertice(1),Vertice(2),float(3))
+b = Arista(Vertice(2),Vertice(1),float(3))
+c = [a,b]
+print(c)
+# c.remove(Arista(Vertice(1),Vertice(3),float(3)))
+print(c)
 
-# G.node_attr.update(color="red", style="filled")
-# G.edge_attr.update(color="blue", width="2.0")
-
-# # G.draw("/home/aledvs/unsa/LAS/TCIII/EXAMEN FINAL/tsp final/graph.png", format='png', prog='neato')
-
-import numpy as np
-from cvxpy import *
-from scipy.spatial.distance import pdist, squareform
-
-# Based on formulation described
-#    @ https://en.wikipedia.org/wiki/Travelling_salesman_problem (February 2016)
-
-np.random.seed(1)
-
-N = 5
-positions = np.random.rand(N, 2)
-distances = squareform(pdist(positions, 'euclidean'))
-print(positions)
-print(distances)
-
-# VARS
-x = Bool(N, N)
-u = Int(N)
-
-# CONSTRAINTS
-constraints = []
-for j in range(N):
-    indices = list(range(0, j)) + list(range(j + 1, N))
-    constraints.append(sum_entries(x[indices, j]) == 1)
-for i in range(N):
-    indices = list(range(0, i)) + list(range(i + 1, N))
-    constraints.append(sum_entries(x[i, indices]) == 1)
-
-for i in range(1, N):
-    for j in range(1, N):
-        if i != j:
-            constraints.append(u[i] - u[j] + N*x[i, j] <= N-1)
-
-# OBJ
-obj = Minimize(sum_entries(mul_elemwise(distances, x)))
-
-# SOLVE
-prob = Problem(obj, constraints)
-prob.solve(verbose=False)
-print(prob.value)
-x_sol = np.array(x.value.T)
-
-""" Plotting part """
-import matplotlib.pyplot as plt
-
-fig, ax = plt.subplots(2, sharex=True, sharey=True)         # Prepare 2 plots
-ax[0].set_title('Raw nodes')
-ax[1].set_title('Optimized tour')
-ax[0].scatter(positions[:, 0], positions[:, 1])             # plot A
-ax[1].scatter(positions[:, 0], positions[:, 1])             # plot B
-start_node = 0
-distance = 0.
-for i in range(N):
-    start_pos = positions[start_node]
-    next_node = np.argmax(x_sol[start_node])
-    end_pos = positions[next_node]
-    ax[1].annotate("",
-            xy=start_pos, xycoords='data',
-            xytext=end_pos, textcoords='data',
-            arrowprops=dict(arrowstyle="->",
-                            connectionstyle="arc3"))
-    distance += np.linalg.norm(end_pos - start_pos)
-    start_node = next_node
-
-textstr = "N nodes: %d\nTotal length: %.3f" % (N, distance)
-props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
-ax[1].text(0.05, 0.95, textstr, transform=ax[1].transAxes, fontsize=14, # Textbox
-        verticalalignment='top', bbox=props)
-
-plt.tight_layout()
-plt.show()
+for i in [1,2,3]+[8,9]:
+    print(i)
