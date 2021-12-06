@@ -150,6 +150,7 @@ class Grafo:
         dist = self._mDist[rV.index(seq[i])][rV.index(seq[i+1])] #Referencias en la matriz
         self._A.append(Arista(seq[i], seq[i+1], dist))
         costo += dist
+      self._A.append(Arista(seq[-1],seq[0], self._mDist[rV.index(seq[-1])][rV.index(seq[0])]))
       self.__costoAsociado = costo + self._mDist[rV.index(seq[len(seq)-1])][rV.index(seq[0])]
 
     def incrementaFrecuencia(self):
@@ -190,11 +191,15 @@ class Grafo:
       # print(f"aristas: {self._A+[Arista(vertices[-1], vertices[0], self._mDist[vertices[-1].getValue()-1][vertices[0].getValue()-1])]}")
       # print(f"costo asociado: {self.__costoAsociado}")
       grado = len(vertices)
-      cond = True
+      cond = True # cond para saber si hay que elegir otras aaristas
       lista_aristas=[x for x in self._A if x in permitidos_drop]
+      print(" ####################################### aca empieza ###########################")
+      print(f"add: {add}")
+      print(f"drop: {drop}")
       print(f"lista_aristas: {lista_aristas}")
       while cond:
         candidatos = sample(lista_aristas, 2)
+        print(f"candidatos: {candidatos}")
         if not candidatos[0].mismoVertice(candidatos[1]) :
           # print(f"candidatos: {candidatos}")
           cond = False
@@ -209,7 +214,10 @@ class Grafo:
           EnPermitidosAdd = True
           ind = 0
           i = 0
+          print(f"vertices: {vertices}")
+          print(f"indices: {indices}")
           while i < grado and EnPermitidosAdd:
+            print(f"ind: {ind}")
             if cond_0:
               secuencia.append(vertices[ind])
               if vertices[ind] == vertices[indices[0]]:
@@ -219,7 +227,8 @@ class Grafo:
                   add.append(Tabu(nueva_a, tenureADD))
                   cond_0 = False
                   ind = indices[2]
-                except ValueError:
+                except:
+                  print(f"EnPermitidosAdd: {False} cond_0: {cond_0}")
                   EnPermitidosAdd = False
               else:
                 ind += 1
@@ -232,11 +241,14 @@ class Grafo:
                   add.append(Tabu(nueva_a, tenureADD))
                   cond_0 = True
                   ind = indices[3]
-                except ValueError:
+                except:
+                  print(f"EnPermitidosAdd: {False} cond_0: {cond_0}")
                   EnPermitidosAdd = False
               else:
                 ind -= 1
             i += 1
+          if not EnPermitidosAdd:
+            cond = True
         # else:
           # if not (candidatos[0] in permitidos_add and candidatos[1] not in permitidos_add):
           #   if candidatos[0] in permitidos_add: # entonces candidatos[1] not in permitidos_add

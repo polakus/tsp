@@ -91,22 +91,30 @@ matriz = leeInstancia(problem)
 # problema = TabuSearch(matriz, f"resultados/gr17.tsp.rdos", "Vecino mas cercano", 3, "2-opt", 4,5, tam**(1/3), optimo)
 
 
-matriz = []
-for i in range(8):
-    col = []
-    for j in range(8):
-        if i==j:
-            col.append(999999999999)
-        else:
-            col.append(round(random.uniform(5.0,20.0),2))
-    matriz.append(col)
-for j in range(len(matriz)):
-    for i in range(j):
-        matriz[i][j]=matriz[j][i]
+# # # # matriz = []
+# # # # for i in range(8):
+# # # #     col = []
+# # # #     for j in range(8):
+# # # #         if i==j:
+# # # #             col.append(999999999999)
+# # # #         else:
+# # # #             col.append(round(random.uniform(5.0,20.0),2))
+# # # #     matriz.append(col)
+# # # # for j in range(len(matriz)):
+# # # #     for i in range(j):
+# # # #         matriz[i][j]=matriz[j][i]
 
-for i in matriz:
-    print(i)
+# # # # for i in matriz:
+# # # #     print(i)
+matriz = [  [999999999999, 19.5, 8.94, 11.31, 9.02, 10.53, 5.35, 19.51],
+            [19.5, 999999999999, 9.26, 7.82, 10.02, 13.85, 9.36, 5.33],
+            [8.94, 9.26, 999999999999, 9.3, 19.95, 12.9, 9.94, 17.59],
+            [11.31, 7.82, 9.3, 999999999999, 13.85, 19.18, 12.62, 10.08],
+            [9.02, 10.02, 19.95, 13.85, 999999999999, 19.96, 15.07, 18.88],
+            [10.53, 13.85, 12.9, 19.18, 19.96, 999999999999, 5.95, 9.1],
+            [5.35, 9.36, 9.94, 12.62, 15.07, 5.95, 999999999999, 7.6],
+            [19.51, 5.33, 17.59, 10.08, 18.88, 9.1, 7.6, 999999999999]]
 
 optimo=0
-problema = TabuSearch(matriz, f"resultados/gr17.tsp.rdos", "Vecino mas cercano", 3, "2-opt", 7,8, 1.0, optimo)
+problema = TabuSearch(matriz, f"resultados/gr17.tsp.rdos", "Vecino mas cercano", 3, "2-opt", 4,5, 1.0, optimo)
 

@@ -62,9 +62,6 @@ class TabuSearch(object):
     
     
     self.__aristas = g1.cargaAristas() # cargamos una lista de todas las aristas
-    print(f"len(self.__aristas): {len(self.__aristas)}")
-    # add = [Tabu(x,4) for x in sample(self.__aristas[0:int(len(self.__aristas)/2)],2)] 
-    # drop = [Tabu(x,5) for x in sample(self.__aristas[int(len(self.__aristas)/2):len(self.__aristas)],2)]
     add = []
     drop = []
     iterac = 0
@@ -73,11 +70,10 @@ class TabuSearch(object):
     tiempoAviso_ini = time()
     tiempoAviso = 0
     # self.__txt.escribir(str(g1.getMatriz()))
-    print(g1.getMatriz())
-    print(f"vertices: {g1.getV()}")
-    print(f"aristas: {g1.getA()}")
-    print(f"add: {add}")
-    print(f"drop: {drop}")
+    # print(f"len(self.__aristas): {len(self.__aristas)}")
+    # print(f"vertices: {g1.getV()}")
+    # print(f"aristas: {g1.getA()}")
+    
     # self.getArista2opt(add, drop, g1)
 
     while tiempoEjec < self.__tiempoMaxEjec:
@@ -86,8 +82,8 @@ class TabuSearch(object):
       self.decrementaTenure(add)
       self.decrementaTenure(drop)
       if costo < self.__soluciones[-1].getCostoAsociado():
-        print(f"costo: {costo} y self.__soluciones[-1].getCostoAsociado(): {self.__soluciones[-1].getCostoAsociado()}")
-        print(f"Costo asociado de nueva solució: {g1.getCostoAsociado()}")
+        # print(f"costo: {costo} y self.__soluciones[-1].getCostoAsociado(): {self.__soluciones[-1].getCostoAsociado()}")
+        # print(f"Costo asociado de nueva solució: {g1.getCostoAsociado()}")
         self.__soluciones.append(copy.deepcopy(g1))
       iterac += 1
       tiempoEjec = time() - self.__tiempoIni
@@ -95,10 +91,10 @@ class TabuSearch(object):
       if tiempoAviso > tiempoAviso_max:
         tiempoAviso = 0
         tiempoAviso_ini = time()
-      print(f"Número de iteraciones: {iterac}. len(add): {len(add)}, len(drop): {len(drop)}")
+      # print(f"Número de iteraciones: {iterac}. len(add): {len(add)}, len(drop): {len(drop)}  <---------------------")
     # self.__txt.imprimir()
-    print(f"len(self.__soluciones): {len(self.__soluciones)}")
-    print(f"Número de iteraciones: {iterac}")
+    # print(f"len(self.__soluciones): {len(self.__soluciones)}")
+    # print(f"Número de iteraciones: {iterac}")
     
 
   def aristasConVertice(self, v):
