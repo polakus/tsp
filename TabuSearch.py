@@ -83,13 +83,15 @@ class TabuSearch(object):
     # self.getArista2opt(add, drop, g1)
 
     while tiempoEjec < self.__tiempoMaxEjec:
-      costo = g1.swap_2opt(self.__add, self.__drop, self.__tenureADD, self.__tenureDROP, self.__permitidos_add, self.__permitidos_drop)
+      costo, seq = g1.swap_2opt(self.__add, self.__drop, self.__tenureADD, self.__tenureDROP, self.__permitidos_add, self.__permitidos_drop)
       # print(g1.getA())
       self.decrementaTenure(self.__add, True)
       self.decrementaTenure(self.__drop, False)
       if costo < self.__soluciones[-1].getCostoAsociado():
+        g1.cargarDesdeSecuenciaDeVertices(seq)
         self.__txt.escribir(f"------------------   NUEVA SOLUCIÓN ENCONTRADA ----------------")
         self.__txt.escribir(str(g1.getV()))
+        self.__txt.escribir(f"Costo Asociado: {g1.getCostoAsociado()}")
         self.__txt.escribir(f"Desviación: {round((g1.getCostoAsociado()*100)/self.__optimo,3)-100}%")
         self.__txt.escribir(f"Tiempo: {int(tiempoEjec/60)} min {int(tiempoEjec%60)} seg")
         print(f"Costo asociado de nueva solución: {g1.getCostoAsociado()}")

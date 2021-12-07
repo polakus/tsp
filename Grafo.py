@@ -180,7 +180,12 @@ class Grafo:
       if len(lista_aristas) >= 3:
         cand_d = sample(lista_aristas, 2)
         cond = True
+        cant_it = 0
         while cond:
+          cant_it += 1
+          if cant_it > 10:
+            print("ESTÁ ESTANCADO")
+            cant_it = 0
           if not cand_d[0].mismoVertice(cand_d[1]):
             if cand_d[0] in permitidos_drop and cand_d[1] in permitidos_drop:
               indices = []
@@ -216,6 +221,7 @@ class Grafo:
         secuencia = []
         ind = 0
         i = 0
+        costo = 0
         c1=vertices[0]==cand_d[0].getOrigen() and vertices[-1]==cand_d[0].getDestino()
         c2=vertices[0]==cand_d[0].getDestino() and vertices[-1]==cand_d[0].getOrigen()
         c3=vertices[0]==cand_d[1].getOrigen() and vertices[-1]==cand_d[1].getDestino()
@@ -236,7 +242,7 @@ class Grafo:
                 ind = indices[3]
               else:
                 ind -= 1
-            # costo += self._mDist[secuencia[i].getValue()-1][vertices[ind%grado].getValue()-1]
+            costo += self._mDist[secuencia[i].getValue()-1][vertices[ind%grado].getValue()-1]
             i += 1
         else:
           der = True
@@ -254,14 +260,19 @@ class Grafo:
                 ind = indices[1]
               else:
                 ind += 1
-            # costo += self._mDist[secuencia[i].getValue()-1][vertices[ind%grado].getValue()-1]
+            costo += self._mDist[secuencia[i].getValue()-1][vertices[ind%grado].getValue()-1]
             i += 1
         # # print(f"vertices: {vertices}")
         # # print(f"secuencia: {secuencia}")
-        self.cargarDesdeSecuenciaDeVertices(copy.deepcopy(secuencia))
+        # self.cargarDesdeSecuenciaDeVertices(copy.deepcopy(secuencia))
+        # if costo != self.__costoAsociado:
+        #   print("ERROR DE COSTO")
+        #   exit()
       else:
+        costo = self.__costoAsociado
+        secuencia = vertices
         print("CUIDADO!! TENURE MUY ALTO")
-      return self.__costoAsociado
+      return costo, secuencia
         # costo += self._mDist[secuencia[0].getValue()-1][secuencia[-1].getValue()-1]
 
     def mejoresIndices(self, solucion, lista_permit):

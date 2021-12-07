@@ -89,7 +89,7 @@ matriz = leeInstancia(problem)
 # print(f"ya leyó la instancia: gr17.tsp\nSe ejecutará {tam**(1/3)} y la instancia es de {tam} vertices")
 # TSP(matriz, f"resultados/gr17.tsp.rdos", "Vecino mas cercano", 3, "2-opt", 4,5, tam**(1/3), optimo)
 
-problema = TabuSearch(matriz, f"resultados/gr17/gr17.tsp.rdos", "Vecino mas cercano", 3, "2-opt", 10,12, 1.0, optimo)
+problema = TabuSearch(matriz, f"resultados/gr17/gr17.tsp.rdos", "Vecino mas cercano", 3, "2-opt", 12,13, 1.0, optimo)
 
 
 # # # # matriz = []
