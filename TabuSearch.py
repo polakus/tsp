@@ -83,12 +83,15 @@ class TabuSearch(object):
     # self.getArista2opt(add, drop, g1)
 
     while tiempoEjec < self.__tiempoMaxEjec:
-      costo, seq = g1.swap_2opt(self.__add, self.__drop, self.__tenureADD, self.__tenureDROP, self.__permitidos_add, self.__permitidos_drop)
+      add = []
+      drop = []
+      costo, seq, add, drop = g1.swap_2opt(self.__permitidos_add, self.__permitidos_drop)
       # print(g1.getA())
       self.decrementaTenure(self.__add, True)
       self.decrementaTenure(self.__drop, False)
       if costo < self.__soluciones[-1].getCostoAsociado():
         g1.cargarDesdeSecuenciaDeVertices(seq)
+        self.agregaAListaTabu(add,drop)
         self.__txt.escribir(f"------------------   NUEVA SOLUCIÓN ENCONTRADA ----------------")
         self.__txt.escribir(str(g1.getV()))
         self.__txt.escribir(f"Costo Asociado: {g1.getCostoAsociado()}")
@@ -132,3 +135,11 @@ class TabuSearch(object):
           self.__permitidos_drop.append(lista_tabu.pop(i).getElemento())
       else:
         i+=1
+
+  def agregaAListaTabu(self, add, drop):
+    for d in drop:
+      self.__permitidos_drop.remove(d)
+      self.__drop.append(Tabu(d, self.__tenureDROP))
+    for a in add:
+      self.__permitidos_add.remove(a)
+      self.__add.append(Tabu(a, self.__tenureADD))

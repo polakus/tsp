@@ -168,7 +168,7 @@ class Grafo:
       G.setV(copy.deepcopy(self.getV()))
       return G
 
-    def swap_2opt(self, add: list, drop: list, tenureADD, tenureDROP, permitidos_add: list, permitidos_drop: list):
+    def swap_2opt(self, permitidos_add: list, permitidos_drop: list):
       vertices = self._V
       grado = len(vertices)
       cond = True # cond para saber si hay que elegir otras aristas
@@ -199,14 +199,14 @@ class Grafo:
               aux2 = Arista(vertices[indices[1]],vertices[indices[3]],self._mDist[vertices[indices[1]].getValue()-1][vertices[indices[3]].getValue()-1])
               if aux1 in permitidos_add and aux2 in permitidos_add:
                 cond = False
-                permitidos_drop.remove(cand_d[0])
-                permitidos_drop.remove(cand_d[1])
-                permitidos_add.remove(aux1)
-                permitidos_add.remove(aux2)
-                add.append(Tabu(aux1, tenureADD))
-                add.append(Tabu(aux2, tenureADD))
-                drop.append(Tabu(cand_d[0], tenureDROP))
-                drop.append(Tabu(cand_d[1], tenureDROP))
+                # permitidos_drop.remove(cand_d[0])
+                # permitidos_drop.remove(cand_d[1])
+                # permitidos_add.remove(aux1)
+                # permitidos_add.remove(aux2)
+                # add.append(Tabu(aux1, tenureADD))
+                # add.append(Tabu(aux2, tenureADD))
+                # drop.append(Tabu(cand_d[0], tenureDROP))
+                # drop.append(Tabu(cand_d[1], tenureDROP))
                 cand_a.append(aux1)
                 cand_a.append(aux2)
               else:
@@ -272,7 +272,7 @@ class Grafo:
         costo = self.__costoAsociado
         secuencia = vertices
         print("CUIDADO!! TENURE MUY ALTO")
-      return costo, secuencia
+      return costo, secuencia, cand_a, cand_d
         # costo += self._mDist[secuencia[0].getValue()-1][secuencia[-1].getValue()-1]
 
     def mejoresIndices(self, solucion, lista_permit):
