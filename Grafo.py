@@ -223,15 +223,14 @@ class Grafo:
         if not (c1 or c2 or c3 or c4):
           der = True
           while i < grado:
+            secuencia.append(vertices[ind])
             if der:
-              secuencia.append(vertices[ind])
               if vertices[ind] == vertices[indices[0]]:
                 der = False
                 ind = indices[2]
               else:
                 ind += 1
             else:
-              secuencia.append(vertices[ind])
               if vertices[ind] == vertices[indices[1]]:
                 der = True
                 ind = indices[3]
@@ -242,15 +241,14 @@ class Grafo:
         else:
           der = True
           while i < grado:
+            secuencia.append(vertices[ind])
             if der:
-              secuencia.append(vertices[ind])
               if vertices[ind] == vertices[indices[0]]:
                 der = False
                 ind = indices[2]
               else:
                 ind -= 1
             else:
-              secuencia.append(vertices[ind])
               if vertices[ind] == vertices[indices[3]]:
                 der = True
                 ind = indices[1]

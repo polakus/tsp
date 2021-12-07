@@ -25,7 +25,7 @@ class TabuSearch(object):
     self.__tenureMaxDROP = int(tenureDROP*1.7)
     self.__tiempoMaxEjec = float(tiempoEjec*60)
     self.__tiempoIni = time()
-    self.__txt = clsTxt("depurando")
+    self.__txt = clsTxt(nombreArchivo)
     self.ts()
 
   def vecinoMasCercano(self, matrizDist: list, pos: int, visitados: list):
@@ -68,6 +68,8 @@ class TabuSearch(object):
     self.__txt.escribir("------------------   SOL INICIAL ----------------")
     self.__txt.escribir(f"Secuencia de vertices: {g1.getV()}")
     self.__txt.escribir(f"Costo asociado: {g1.getCostoAsociado()}")
+    self.__txt.escribir(f"Desviación: {round((g1.getCostoAsociado()*100)/self.__optimo,3)-100}%")
+
     iterac = 0
     tiempoEjec = time() - self.__tiempoIni
     tiempoAviso_max = float(10)
@@ -88,6 +90,7 @@ class TabuSearch(object):
       if costo < self.__soluciones[-1].getCostoAsociado():
         self.__txt.escribir(f"------------------   NUEVA SOLUCIÓN ENCONTRADA ----------------")
         self.__txt.escribir(str(g1.getV()))
+        self.__txt.escribir(f"Desviación: {round((g1.getCostoAsociado()*100)/self.__optimo,3)-100}%")
         self.__txt.escribir(f"Tiempo: {int(tiempoEjec/60)} min {int(tiempoEjec%60)} seg")
         print(f"Costo asociado de nueva solución: {g1.getCostoAsociado()}")
         self.__soluciones.append(copy.deepcopy(g1))
