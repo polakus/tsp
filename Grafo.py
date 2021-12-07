@@ -177,14 +177,14 @@ class Grafo:
       # # print(f"add: {add}, permitidos_add: {permitidos_add}")
       # # print(f"drop: {drop}, permitidos_drop: {permitidos_drop}")
       # # print(f"lista_aristas: {lista_aristas}")
-      if len(lista_aristas) >= 3:
+      if len(lista_aristas) >= 2:
         cand_d = sample(lista_aristas, 2)
         cond = True
         cant_it = 0
         while cond:
           cant_it += 1
           if cant_it > 10:
-            print("ESTÁ ESTANCADO")
+            print("ESTÁ ESTANCADO 2opt")
             cant_it = 0
           if not cand_d[0].mismoVertice(cand_d[1]):
             if cand_d[0] in permitidos_drop and cand_d[1] in permitidos_drop:
