@@ -15,6 +15,10 @@ class TabuSearch(object):
     self.__nroIntercambios=nroIntercambios*2    #corresponde al nro de vertices los intercambios. 1intercambio => 2 vertices
     self.__opt = opt
     self.__optimo = optimo
+    self.__add = []
+    self.__drop = []
+    self.__permitidos_add = []
+    self.__permitidos_drop = []
     self.__tenureADD =  tenureADD
     self.__tenureMaxADD = int(tenureADD*1.7)
     self.__tenureDROP =  tenureDROP
@@ -49,21 +53,17 @@ class TabuSearch(object):
     return recorrido
 
   def ts(self):
-    add = [] # Tiene objetos de la clase Tabu
-    drop = [] # Tiene objetos de la clase Tabu
     g1 = self._G.copyVacio()
     vecinosCercanos = self.solucionVecinosCercanos()
     
     g1.cargarDesdeSecuenciaDeVertices(vecinosCercanos) #Carga el recorrido a la solución
     self.__soluciones.append(copy.deepcopy(g1)) #Agregar solución inicial
-    Sol_Actual = self._G.copyVacio()
-    Sol_Actual = self.__soluciones[len(self.__soluciones)-1] #La actual es la Primera solución
-    Sol_Optima = copy.deepcopy(Sol_Actual) #Ultima solucion optima obtenida, corresponde a la primera Solucion
+    # Sol_Actual = self._G.copyVacio()
+    # Sol_Actual = self.__soluciones[len(self.__soluciones)-1] #La actual es la Primera solución
+    # Sol_Optima = copy.deepcopy(Sol_Actual) #Ultima solucion optima obtenida, corresponde a la primera Solucion
     
-    
-    self.__aristas = g1.cargaAristas() # cargamos una lista de todas las aristas
-    add = []
-    drop = []
+    self.__permitidos_add = g1.cargaAristas() # cargamos una lista de todas las aristas
+    self.__permitidos_drop = copy.deepcopy(self.__permitidos_add)
     iterac = 0
     tiempoEjec = time() - self.__tiempoIni
     tiempoAviso_max = float(10)
@@ -77,13 +77,13 @@ class TabuSearch(object):
     # self.getArista2opt(add, drop, g1)
 
     while tiempoEjec < self.__tiempoMaxEjec:
-      costo = g1.swap_2opt(add, drop, self.__tenureADD, self.__tenureDROP, self.__aristas)
+      costo = g1.swap_2opt(self.__add, self.__drop, self.__tenureADD, self.__tenureDROP, self.__permitidos_add, self.__permitidos_drop)
       # print(g1.getA())
-      self.decrementaTenure(add)
-      self.decrementaTenure(drop)
+      self.decrementaTenure(self.__add, True)
+      self.decrementaTenure(self.__drop, False)
       if costo < self.__soluciones[-1].getCostoAsociado():
         # print(f"costo: {costo} y self.__soluciones[-1].getCostoAsociado(): {self.__soluciones[-1].getCostoAsociado()}")
-        # print(f"Costo asociado de nueva solució: {g1.getCostoAsociado()}")
+        print(f"Costo asociado de nueva solución: {g1.getCostoAsociado()}")
         self.__soluciones.append(copy.deepcopy(g1))
       iterac += 1
       tiempoEjec = time() - self.__tiempoIni
@@ -91,10 +91,11 @@ class TabuSearch(object):
       if tiempoAviso > tiempoAviso_max:
         tiempoAviso = 0
         tiempoAviso_ini = time()
-      # print(f"Número de iteraciones: {iterac}. len(add): {len(add)}, len(drop): {len(drop)}  <---------------------")
+        print(f"Número de iteraciones: {iterac}. len(add): {len(self.__add)}, len(drop): {len(self.__drop)}  <---------------------")
+        print(f"len(permitidos_add): {len(self.__permitidos_add)} len(permitidos_drop): {len(self.__permitidos_drop)}")
     # self.__txt.imprimir()
-    # print(f"len(self.__soluciones): {len(self.__soluciones)}")
-    # print(f"Número de iteraciones: {iterac}")
+    print(f"len(self.__soluciones): {len(self.__soluciones)}")
+    print(f"Número de iteraciones: {iterac}")
     
 
   def aristasConVertice(self, v):
@@ -104,11 +105,14 @@ class TabuSearch(object):
         aristas.append(a)
     return aristas
 
-  def decrementaTenure(self, lista_tabu: list):
+  def decrementaTenure(self, lista_tabu: list, add):
     i=0
     while i < len(lista_tabu):
       lista_tabu[i].decrementaT()
       if(lista_tabu[i].getTenure()==0):
-        lista_tabu.pop(i)
+        if add:
+          self.__permitidos_add.append(lista_tabu.pop(i).getElemento())
+        else:
+          self.__permitidos_drop.append(lista_tabu.pop(i).getElemento())
       else:
         i+=1

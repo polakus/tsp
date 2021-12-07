@@ -81,6 +81,7 @@ dir_local="/home/aledvs/unsa/LAS/TCIII/EXAMEN FINAL/tsp final/temp"
 #     print(f"ya leyó la instancia: {instancia}\nSe ejecutará {tam**(1/3)} y la instancia es de {tam} vertices")
 #     TSP(matriz, f"resultados/{instancia}.rdos", "Vecino mas cercano", 3, "2-opt", 4,5, tam**(1/3), optimo)
 optimo = extraeOpt(dir_rem,"gr17.tsp")
+print(f"optimo: {optimo}")
 problem = tsplib95.load(os.path.join(dir_rem, "gr17.tsp"))
 tam = problem.dimension
 matriz = leeInstancia(problem)
@@ -88,7 +89,7 @@ matriz = leeInstancia(problem)
 # print(f"ya leyó la instancia: gr17.tsp\nSe ejecutará {tam**(1/3)} y la instancia es de {tam} vertices")
 # TSP(matriz, f"resultados/gr17.tsp.rdos", "Vecino mas cercano", 3, "2-opt", 4,5, tam**(1/3), optimo)
 
-# problema = TabuSearch(matriz, f"resultados/gr17.tsp.rdos", "Vecino mas cercano", 3, "2-opt", 4,5, tam**(1/3), optimo)
+problema = TabuSearch(matriz, f"resultados/gr17.tsp.rdos", "Vecino mas cercano", 3, "2-opt", 10,12, 1.0, optimo)
 
 
 # # # # matriz = []
@@ -106,15 +107,18 @@ matriz = leeInstancia(problem)
 
 # # # # for i in matriz:
 # # # #     print(i)
-matriz = [  [999999999999, 19.5, 8.94, 11.31, 9.02, 10.53, 5.35, 19.51],
-            [19.5, 999999999999, 9.26, 7.82, 10.02, 13.85, 9.36, 5.33],
-            [8.94, 9.26, 999999999999, 9.3, 19.95, 12.9, 9.94, 17.59],
-            [11.31, 7.82, 9.3, 999999999999, 13.85, 19.18, 12.62, 10.08],
-            [9.02, 10.02, 19.95, 13.85, 999999999999, 19.96, 15.07, 18.88],
-            [10.53, 13.85, 12.9, 19.18, 19.96, 999999999999, 5.95, 9.1],
-            [5.35, 9.36, 9.94, 12.62, 15.07, 5.95, 999999999999, 7.6],
-            [19.51, 5.33, 17.59, 10.08, 18.88, 9.1, 7.6, 999999999999]]
 
-optimo=0
-problema = TabuSearch(matriz, f"resultados/gr17.tsp.rdos", "Vecino mas cercano", 3, "2-opt", 4,5, 1.0, optimo)
+
+
+# # # # matriz = [  [999999999999, 19.5, 8.94, 11.31, 9.02, 10.53, 5.35, 19.51],
+# # # #             [19.5, 999999999999, 9.26, 7.82, 10.02, 13.85, 9.36, 5.33],
+# # # #             [8.94, 9.26, 999999999999, 9.3, 19.95, 12.9, 9.94, 17.59],
+# # # #             [11.31, 7.82, 9.3, 999999999999, 13.85, 19.18, 12.62, 10.08],
+# # # #             [9.02, 10.02, 19.95, 13.85, 999999999999, 19.96, 15.07, 18.88],
+# # # #             [10.53, 13.85, 12.9, 19.18, 19.96, 999999999999, 5.95, 9.1],
+# # # #             [5.35, 9.36, 9.94, 12.62, 15.07, 5.95, 999999999999, 7.6],
+# # # #             [19.51, 5.33, 17.59, 10.08, 18.88, 9.1, 7.6, 999999999999]]
+
+# # # # optimo = 67.16
+# # # # problema = TabuSearch(matriz, f"resultados/gr17.tsp.rdos", "Vecino mas cercano", 3, "2-opt", 4,5, 1.0, optimo)
 

@@ -168,101 +168,142 @@ class Grafo:
       G.setV(copy.deepcopy(self.getV()))
       return G
 
-    def swap_2opt(self, add, drop, tenureADD, tenureDROP, aristas):
-      permitidos_add = []
-      permitidos_drop = []
-      # print("############ empieza aca ############")
-      # if add
-      for a in aristas:
-        i = 0
-        # print(add[0].getElemento()==a)
-        while i < len(add) and add[i].getElemento() != a:
-          # print("al menos una vez")
-          i+=1
-        if i>=len(add):
-          permitidos_add.append(a)
-        i = 0
-        while i<len(drop) and drop[i].getElemento() != a:
-          i+=1
-        if i>=len(drop):
-          permitidos_drop.append(a)
+    def swap_2opt(self, add, drop, tenureADD, tenureDROP, permitidos_add, permitidos_drop):
+      # permitidos_add = []
+      # permitidos_drop = []
+      # # if add
+      # for a in aristas:
+      #   i = 0
+      #   while i < len(add) and add[i].getElemento() != a:
+      #     i+=1
+      #   if i>=len(add):
+      #     permitidos_add.append(a)
+      #   i = 0
+      #   while i<len(drop) and drop[i].getElemento() != a:
+      #     i+=1
+      #   if i>=len(drop):
+      #     permitidos_drop.append(a)
+      # print(f"permitidos_drop: {permitidos_drop}")
+      # print(f"permitidos_add: {permitidos_add}")
       vertices = self._V
-      # print(f"vertices: {vertices}")
-      # print(f"aristas: {self._A+[Arista(vertices[-1], vertices[0], self._mDist[vertices[-1].getValue()-1][vertices[0].getValue()-1])]}")
-      # print(f"costo asociado: {self.__costoAsociado}")
       grado = len(vertices)
-      cond = True # cond para saber si hay que elegir otras aaristas
+      cond = True # cond para saber si hay que elegir otras aristas
       lista_aristas=[x for x in self._A if x in permitidos_drop]
-      print(" ####################################### aca empieza ###########################")
-      print(f"add: {add}")
-      print(f"drop: {drop}")
-      print(f"lista_aristas: {lista_aristas}")
+      # print(" ####################################### aca empieza ###########################")
+      # print(f"add: {add}")
+      # print(f"drop: {drop}")
+      # print(f"lista_aristas: {lista_aristas}")
       while cond:
-        candidatos = sample(lista_aristas, 2)
-        print(f"candidatos: {candidatos}")
-        if not candidatos[0].mismoVertice(candidatos[1]) :
-          # print(f"candidatos: {candidatos}")
+        costo = 0
+        # cand_a = []
+        cand_d = sample(lista_aristas, 2)
+        # print(f"cand_d: {cand_d}")
+        if not cand_d[0].mismoVertice(cand_d[1]) :
+          # # print(f"cand_d: {cand_d}")
           cond = False
           secuencia = []
           indices = []
-          indices.append(vertices.index(candidatos[0].getOrigen()))
-          indices.append(vertices.index(candidatos[0].getDestino()))
-          indices.append(vertices.index(candidatos[1].getOrigen()))
-          indices.append(vertices.index(candidatos[1].getDestino()))
+          indices.append(vertices.index(cand_d[0].getOrigen()))
+          indices.append(vertices.index(cand_d[0].getDestino()))
+          indices.append(vertices.index(cand_d[1].getOrigen()))
+          indices.append(vertices.index(cand_d[1].getDestino()))
           indices.sort()
-          cond_0 = True
+          
           EnPermitidosAdd = True
           ind = 0
           i = 0
-          print(f"vertices: {vertices}")
-          print(f"indices: {indices}")
-          while i < grado and EnPermitidosAdd:
-            print(f"ind: {ind}")
-            if cond_0:
-              secuencia.append(vertices[ind])
-              if vertices[ind] == vertices[indices[0]]:
-                nueva_a = Arista(vertices[ind],vertices[indices[2]],self._mDist[vertices[ind].getValue()-1][vertices[indices[2]].getValue()-1])
-                try:
-                  permitidos_add.remove(nueva_a)
-                  add.append(Tabu(nueva_a, tenureADD))
-                  cond_0 = False
-                  ind = indices[2]
-                except:
-                  print(f"EnPermitidosAdd: {False} cond_0: {cond_0}")
-                  EnPermitidosAdd = False
+          # print(f"vertices: {vertices}")
+          # print(f"indices: {indices}")
+          c1=vertices[0]==cand_d[0].getOrigen() and vertices[-1]==cand_d[0].getDestino()
+          c2=vertices[0]==cand_d[0].getDestino() and vertices[-1]==cand_d[0].getOrigen()
+          c3=vertices[0]==cand_d[1].getOrigen() and vertices[-1]==cand_d[1].getDestino()
+          c4=vertices[0]==cand_d[1].getDestino() and vertices[-1]==cand_d[1].getOrigen()
+          if not (c1 or c2 or c3 or c4):
+            cond_0 = True
+            while i < grado and EnPermitidosAdd:
+              # print(f"ind: {ind}")
+              if cond_0:
+                secuencia.append(vertices[ind])
+                if vertices[ind] == vertices[indices[0]]:
+                  nueva_a = Arista(vertices[ind],vertices[indices[2]],self._mDist[vertices[ind].getValue()-1][vertices[indices[2]].getValue()-1])
+                  try:
+                    permitidos_add.remove(nueva_a)
+                    add.append(Tabu(nueva_a, tenureADD))
+                    # if i > 0 and indices[1] != 1:
+                    cond_0 = False
+                    ind = indices[2]
+                  except:
+                    # print(f"EnPermitidosAdd: {False} cond_0: {cond_0}")
+                    EnPermitidosAdd = False
+                else:
+                  ind += 1
               else:
-                ind += 1
-            else:
-              secuencia.append(vertices[ind])
-              if vertices[ind] == vertices[indices[1]]:
-                nueva_a = Arista(vertices[ind],vertices[indices[3]],self._mDist[vertices[ind].getValue()-1][vertices[indices[3]].getValue()-1])
-                try:
-                  permitidos_add.remove(nueva_a)
-                  add.append(Tabu(nueva_a, tenureADD))
-                  cond_0 = True
-                  ind = indices[3]
-                except:
-                  print(f"EnPermitidosAdd: {False} cond_0: {cond_0}")
-                  EnPermitidosAdd = False
+                secuencia.append(vertices[ind])
+                if vertices[ind] == vertices[indices[1]]:
+                  nueva_a = Arista(vertices[ind],vertices[indices[3]],self._mDist[vertices[ind].getValue()-1][vertices[indices[3]].getValue()-1])
+                  try:
+                    permitidos_add.remove(nueva_a)
+                    add.append(Tabu(nueva_a, tenureADD))
+                    cond_0 = True
+                    ind = indices[3]
+                  except:
+                    # print(f"EnPermitidosAdd: {False} cond_0: {cond_0}")
+                    EnPermitidosAdd = False
+                else:
+                  ind -= 1
+              # secuencia[i].getValue()
+              # vertices[ind].getValue()
+              # costo += self._mDist[secuencia[i].getValue()-1][vertices[ind%grado].getValue()-1]
+              i += 1
+            if not EnPermitidosAdd:
+              cond = True
+          else:
+            # print("entro caso")
+            cond_0 = True
+            while i < grado and EnPermitidosAdd:
+              # print(f"ind: {ind}")
+              if cond_0:
+                secuencia.append(vertices[ind])
+                if vertices[ind] == vertices[indices[0]]:
+                  nueva_a = Arista(vertices[ind],vertices[indices[2]],self._mDist[vertices[ind].getValue()-1][vertices[indices[2]].getValue()-1])
+                  try:
+                    permitidos_add.remove(nueva_a)
+                    add.append(Tabu(nueva_a, tenureADD))
+                    # if i > 0 and indices[1] != 1:
+                    cond_0 = False
+                    ind = indices[2]
+                  except:
+                    # print(f"EnPermitidosAdd: {False} cond_0: {cond_0}")
+                    EnPermitidosAdd = False
+                else:
+                  ind -= 1
               else:
-                ind -= 1
-            i += 1
-          if not EnPermitidosAdd:
-            cond = True
-        # else:
-          # if not (candidatos[0] in permitidos_add and candidatos[1] not in permitidos_add):
-          #   if candidatos[0] in permitidos_add: # entonces candidatos[1] not in permitidos_add
-          #     candidatos[1] = lista_aristas[randint(0,len(lista_aristas)-1)]
-          #   else:
-          #     candidatos[0] = lista_aristas[randint(0,len(lista_aristas)-1)]
-          # else:
-          #   candidatos[randint(0,1)] = lista_aristas[randint(0,len(lista_aristas)-1)]
-      # print(f"secuencia: {secuencia}")
+                secuencia.append(vertices[ind])
+                if vertices[ind] == vertices[indices[3]]:
+                  nueva_a = Arista(vertices[ind],vertices[indices[1]],self._mDist[vertices[ind].getValue()-1][vertices[indices[1]].getValue()-1])
+                  try:
+                    permitidos_add.remove(nueva_a)
+                    add.append(Tabu(nueva_a, tenureADD))
+                    cond_0 = True
+                    ind = indices[1]
+                  except:
+                    # print(f"EnPermitidosAdd: {False} cond_0: {cond_0}")
+                    EnPermitidosAdd = False
+                else:
+                  ind += 1
+              # secuencia[i].getValue()
+              # vertices[ind].getValue()
+              # costo += self._mDist[secuencia[i].getValue()-1][vertices[ind%grado].getValue()-1]
+              i += 1
+            if not EnPermitidosAdd:
+              cond = True
       self.cargarDesdeSecuenciaDeVertices(copy.deepcopy(secuencia))
-      drop.append(Tabu(candidatos[0],tenureDROP))
-      drop.append(Tabu(candidatos[1],tenureDROP))
-      permitidos_drop.remove(candidatos[0])
-      permitidos_drop.remove(candidatos[1])
+      drop.append(Tabu(cand_d[0],tenureDROP))
+      drop.append(Tabu(cand_d[1],tenureDROP))
+      permitidos_drop.remove(cand_d[0])
+      permitidos_drop.remove(cand_d[1])
+      # costo += self._mDist[secuencia[0].getValue()-1][secuencia[-1].getValue()-1]
+      
       return self.__costoAsociado
 
     def mejoresIndices(self, solucion, lista_permit):
