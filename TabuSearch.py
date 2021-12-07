@@ -25,7 +25,7 @@ class TabuSearch(object):
     self.__tenureMaxDROP = int(tenureDROP*1.7)
     self.__tiempoMaxEjec = float(tiempoEjec*60)
     self.__tiempoIni = time()
-    # self.__txt = clsTxt("depurando")
+    self.__txt = clsTxt("depurando")
     self.ts()
 
   def vecinoMasCercano(self, matrizDist: list, pos: int, visitados: list):
@@ -58,12 +58,16 @@ class TabuSearch(object):
     
     g1.cargarDesdeSecuenciaDeVertices(vecinosCercanos) #Carga el recorrido a la solución
     self.__soluciones.append(copy.deepcopy(g1)) #Agregar solución inicial
-    # Sol_Actual = self._G.copyVacio()
-    # Sol_Actual = self.__soluciones[len(self.__soluciones)-1] #La actual es la Primera solución
-    # Sol_Optima = copy.deepcopy(Sol_Actual) #Ultima solucion optima obtenida, corresponde a la primera Solucion
-    
     self.__permitidos_add = g1.cargaAristas() # cargamos una lista de todas las aristas
     self.__permitidos_drop = copy.deepcopy(self.__permitidos_add)
+    self.__txt.escribir(str(g1))
+    self.__txt.escribir("------------------   DATOS INICIALES ----------------")
+    self.__txt.escribir(f"Mejor encontrado (peso): {self.__optimo}")
+    self.__txt.escribir(f"TenureADD: {self.__tenureADD}, TenureDROP: {self.__tenureDROP}")
+    self.__txt.escribir(f"Tiempo de Ejecución asignado: {self.__tiempoMaxEjec}")
+    self.__txt.escribir("------------------   SOL INICIAL ----------------")
+    self.__txt.escribir(f"Secuencia de vertices: {g1.getV()}")
+    self.__txt.escribir(f"Costo asociado: {g1.getCostoAsociado()}")
     iterac = 0
     tiempoEjec = time() - self.__tiempoIni
     tiempoAviso_max = float(10)
@@ -82,9 +86,12 @@ class TabuSearch(object):
       self.decrementaTenure(self.__add, True)
       self.decrementaTenure(self.__drop, False)
       if costo < self.__soluciones[-1].getCostoAsociado():
-        # print(f"costo: {costo} y self.__soluciones[-1].getCostoAsociado(): {self.__soluciones[-1].getCostoAsociado()}")
+        self.__txt.escribir(f"------------------   NUEVA SOLUCIÓN ENCONTRADA ----------------")
+        self.__txt.escribir(str(g1.getV()))
+        self.__txt.escribir(f"Tiempo: {int(tiempoEjec/60)} min {int(tiempoEjec%60)} seg")
         print(f"Costo asociado de nueva solución: {g1.getCostoAsociado()}")
         self.__soluciones.append(copy.deepcopy(g1))
+
       iterac += 1
       tiempoEjec = time() - self.__tiempoIni
       tiempoAviso = time() - tiempoAviso_ini
@@ -94,8 +101,12 @@ class TabuSearch(object):
         print(f"Número de iteraciones: {iterac}. len(add): {len(self.__add)}, len(drop): {len(self.__drop)}  <---------------------")
         print(f"len(permitidos_add): {len(self.__permitidos_add)} len(permitidos_drop): {len(self.__permitidos_drop)}")
     # self.__txt.imprimir()
+    print(f"optimo mejor solución: {self.__soluciones[-1].getCostoAsociado()}")
     print(f"len(self.__soluciones): {len(self.__soluciones)}")
     print(f"Número de iteraciones: {iterac}")
+    self.__txt.escribir(f"Número de iteraciones: {iterac}")
+    self.__txt.escribir(f"Tiempo total de ejecución: {int(tiempoEjec/60)} min {int(tiempoEjec%60)} seg")
+    self.__txt.imprimir()
     
 
   def aristasConVertice(self, v):
