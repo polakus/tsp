@@ -168,11 +168,31 @@ class Grafo:
       G.setV(copy.deepcopy(self.getV()))
       return G
 
+    def compara(self, aristas, permitidos):
+      AristasNuevas = []
+      claves = [hash(a) for a in permitidos]
+      dictA = dict(zip(claves,permitidos))
+      for EP in aristas:
+        h = hash(EP)
+        hInverso = hash(EP.getAristaInvertida())
+        try:
+          arista = dictA[h]
+        except KeyError:
+          arista = None
+        try:
+          aristaInv = dictA[hInverso]
+        except KeyError:
+          aristaInv = None 
+        if arista is not None or aristaInv is not None:
+          AristasNuevas.append(EP)
+      return AristasNuevas
+
     def swap_2opt(self, permitidos_add: list, permitidos_drop: list):
       vertices = self._V
       grado = len(vertices)
       cond = True # cond para saber si hay que elegir otras aristas
-      lista_aristas=[x for x in self._A if x in permitidos_drop]
+      # lista_aristas=[x for x in self._A if x in permitidos_drop]
+      lista_aristas = self.compara(self._A, permitidos_drop)
       # # print(" ####################################### aca empieza ###########################")
       # # print(f"add: {add}, permitidos_add: {permitidos_add}")
       # # print(f"drop: {drop}, permitidos_drop: {permitidos_drop}")

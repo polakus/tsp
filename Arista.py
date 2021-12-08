@@ -39,7 +39,10 @@ class Arista(object):
 
     def mismoVertice(self, A):
         return (self._origen == A.getOrigen() or self._origen == A.getDestino() or self._destino == A.getOrigen() or self._destino == A.getDestino())
-
+    
+    def getAristaInvertida(self):
+            return Arista(self._destino, self._origen, self._peso)
+    
     def __eq__(self, A):
         return ((self.getOrigen() == A.getOrigen()) and (self.getDestino() == A.getDestino()) or ((self.getDestino() == A.getOrigen()) and (self.getOrigen() == A.getDestino())))
 
@@ -49,4 +52,7 @@ class Arista(object):
     def __repr__(self):
         return str(self)
 
- 
+    def __hash__(self):
+            origen = self._origen.getValue()
+            destino = self._destino.getValue()
+            return int(((origen+destino)*(origen+destino+1))/2+destino)
