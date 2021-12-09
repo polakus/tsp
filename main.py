@@ -71,16 +71,16 @@ pw="11ixjnph"
 formato="utf-8"
 dir_rem="/home/ale368/unsa/LAS/TCIII/EXAMEN FINAL/instancias/"
 dir_local="/home/aledvs/unsa/LAS/TCIII/EXAMEN FINAL/tsp final/temp"
-instancias = traeInstancias(ip,usuario,pw,formato,dir_rem,dir_local)
-for _ in range(3):
-    for instancia in instancias:
-        optimo = extraeOpt(dir_local,instancia)
-        problem = tsplib95.load(os.path.join(dir_local, instancia))
-        tam = problem.dimension
-        matriz = leeInstancia(problem)
-        os.remove(os.path.join(dir_local,instancia))
-        print(f"ya leyó la instancia: {instancia}\nSe ejecutará {tam**(1/3)} y la instancia es de {tam} vertices")
-        TabuSearch(matriz, f"resultados_v2/{instancia}/{instancia}.rdos", "Vecino mas cercano", 3, "2-opt", int(tam**0.7),int(tam**0.7)+1, tam**(1/3), optimo)
+# instancias = traeInstancias(ip,usuario,pw,formato,dir_rem,dir_local)
+# for _ in range(3):
+#     for instancia in instancias:
+#         optimo = extraeOpt(dir_local,instancia)
+#         problem = tsplib95.load(os.path.join(dir_local, instancia))
+#         tam = problem.dimension
+#         matriz = leeInstancia(problem)
+#         os.remove(os.path.join(dir_local,instancia))
+#         print(f"ya leyó la instancia: {instancia}\nSe ejecutará {tam**(1/3)} y la instancia es de {tam} vertices")
+#         TabuSearch(matriz, f"resultados_v2/{instancia}/{instancia}.rdos", "Vecino mas cercano", 3, "2-opt", int(tam**0.7),int(tam**0.7)+1, tam**(1/3), optimo)
 
 
 
@@ -95,15 +95,15 @@ for _ in range(3):
 
 
 
-# optimo = extraeOpt(dir_rem,"gr17.tsp")
-# print(f"optimo: {optimo}")
-# problem = tsplib95.load(os.path.join(dir_rem, "gr17.tsp"))
-# tam = problem.dimension
-# matriz = leeInstancia(problem)
-# # os.remove(os.path.join(dir_rem,"gr17.tsp"))
-# # print(f"ya leyó la instancia: gr17.tsp\nSe ejecutará {tam**(1/3)} y la instancia es de {tam} vertices")
+optimo = extraeOpt(dir_rem,"gr17.tsp")
+print(f"optimo: {optimo}")
+problem = tsplib95.load(os.path.join(dir_rem, "gr17.tsp"))
+tam = problem.dimension
+matriz = leeInstancia(problem)
+# os.remove(os.path.join(dir_rem,"gr17.tsp"))
+# print(f"ya leyó la instancia: gr17.tsp\nSe ejecutará {tam**(1/3)} y la instancia es de {tam} vertices")
 
-# problema = TabuSearch(matriz, f"resultados/gr17/gr17.tsp.rdos", "Vecino mas cercano", 3, "2-opt", 10,11, 1.0, optimo)
+problema = TabuSearch(matriz, f"resultados/gr17/gr17.tsp.rdos", 2,3, 5.0, optimo)
 
 
 # # # # # matriz = []
@@ -133,13 +133,13 @@ for _ in range(3):
 # #             [5.35, 9.36, 9.94, 12.62, 15.07, 5.95, 999999999999, 7.6],
 # #             [19.51, 5.33, 17.59, 10.08, 18.88, 9.1, 7.6, 999999999999]]
 
-# # matriz = [  [999999999999, 19.5, 8.94, 11.31, 9.02, 10.53],
-# #             [19.5, 999999999999, 9.26, 7.82, 10.02, 13.85],
-# #             [8.94, 9.26, 999999999999, 9.3, 19.95, 12.9],
-# #             [11.31, 7.82, 9.3, 999999999999, 13.85, 19.18],
-# #             [9.02, 10.02, 19.95, 13.85, 999999999999, 19.96],
-# #             [10.53, 13.85, 12.9, 19.18, 19.96, 999999999999]]
+# matriz = [  [999999999999, 19.5, 8.94, 11.31, 9.02, 10.53],
+#             [19.5, 999999999999, 9.26, 7.82, 10.02, 13.85],
+#             [8.94, 9.26, 999999999999, 9.3, 19.95, 12.9],
+#             [11.31, 7.82, 9.3, 999999999999, 13.85, 19.18],
+#             [9.02, 10.02, 19.95, 13.85, 999999999999, 19.96],
+#             [10.53, 13.85, 12.9, 19.18, 19.96, 999999999999]]
 
-# # optimo = 67.16
-# # problema = TabuSearch(matriz, f"resultados/inv6.tsp.rdos", "Vecino mas cercano", 3, "2-opt", 3,4, 1.0, optimo)
+# optimo = 67.16
+# problema = TabuSearch(matriz, f"resultados/inv6.tsp.rdos", 2, 3, 1.0, optimo)
 
