@@ -64,7 +64,7 @@ class TabuSearch(object):
     self.__txt.escribir("------------------   DATOS INICIALES ----------------")
     self.__txt.escribir(f"Mejor encontrado (peso): {self.__optimo}")
     self.__txt.escribir(f"TenureADD: {self.__tenureADD}, TenureDROP: {self.__tenureDROP}")
-    self.__txt.escribir(f"Tiempo de Ejecución asignado: {self.__tiempoMaxEjec}")
+    self.__txt.escribir(f"Tiempo de Ejecución asignado: {int(self.__tiempoMaxEjec/60)} min {int(self.__tiempoMaxEjec)%60} seg")
     self.__txt.escribir("------------------   SOL INICIAL ----------------")
     self.__txt.escribir(f"Secuencia de vertices: {g1.getV()}")
     self.__txt.escribir(f"Costo asociado: {g1.getCostoAsociado()}")
@@ -85,13 +85,16 @@ class TabuSearch(object):
     while tiempoEjec < self.__tiempoMaxEjec:
       add = []
       drop = []
+      # ini = time()
       costo, seq, add, drop = g1.swap_2opt(self.__permitidos_add, self.__permitidos_drop)
-      # print(g1.getA())
+      # print(f"swap2opt tarda: {time()-ini}")
+      # ini = time()
       self.decrementaTenure(self.__add, True)
       self.decrementaTenure(self.__drop, False)
+      self.agregaAListaTabu(add,drop)
+      # print(f"actualiza listas tarda: {time()-ini}")
       if costo < self.__soluciones[-1].getCostoAsociado():
         g1.cargarDesdeSecuenciaDeVertices(seq)
-        self.agregaAListaTabu(add,drop)
         self.__txt.escribir(f"------------------   NUEVA SOLUCIÓN ENCONTRADA ----------------")
         self.__txt.escribir(str(g1.getV()))
         self.__txt.escribir(f"Costo Asociado: {g1.getCostoAsociado()}")
