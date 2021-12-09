@@ -74,14 +74,14 @@ dir_local="/home/aledvs/unsa/LAS/TCIII/EXAMEN FINAL/tsp final/temp"
 # for _ in range(5):
 instancias = traeInstancias(ip,usuario,pw,formato,dir_rem,dir_local)
 for instancia in instancias:
-    if instancia == "d493.tsp":
-        optimo = extraeOpt(dir_local,instancia)
-        problem = tsplib95.load(os.path.join(dir_local, instancia))
-        tam = problem.dimension
-        matriz = leeInstancia(problem)
-        os.remove(os.path.join(dir_local,instancia))
-        print(f"ya leyó la instancia: {instancia}\nSe ejecutará {tam**(1/3)} y la instancia es de {tam} vertices")
-        TabuSearch(matriz, f"resultados_v2/ejec 2/{instancia}/{instancia}.rdos", "Vecino mas cercano", 3, "2-opt", int(tam**0.7),int(tam**0.7)+1, tam**(1/3), optimo)
+    # if instancia == "ch150.tsp":
+    optimo = extraeOpt(dir_local,instancia)
+    problem = tsplib95.load(os.path.join(dir_local, instancia))
+    tam = problem.dimension
+    matriz = leeInstancia(problem)
+    os.remove(os.path.join(dir_local,instancia))
+    print(f"ya leyó la instancia: {instancia}\nSe ejecutará {tam**(1/3)} y la instancia es de {tam} vertices")
+    TabuSearch(matriz, f"resultados_3optMOD2/ejec 1/{instancia}/{instancia}.rdos", "Vecino mas cercano", 3, "2-opt", int(tam**0.7),int(tam**0.7)+1, tam**(1/3), optimo)
 
 
 

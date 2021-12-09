@@ -86,7 +86,7 @@ class TabuSearch(object):
       add = []
       drop = []
       # ini = time()
-      costo, seq, add, drop = g1.swap_2opt(self.__permitidos_add, self.__permitidos_drop)
+      costo, seq, add, drop = g1.swap_3opt(self.__permitidos_add, self.__permitidos_drop)
       # print(f"swap2opt tarda: {time()-ini}")
       # ini = time()
       self.decrementaTenure(self.__add, True)
@@ -102,7 +102,8 @@ class TabuSearch(object):
         self.__txt.escribir(f"Tiempo: {int(tiempoEjec/60)} min {int(tiempoEjec%60)} seg")
         print(f"Costo asociado de nueva solución: {g1.getCostoAsociado()}")
         self.__soluciones.append(copy.deepcopy(g1))
-
+      # else:
+      #   print(f"len(self.__add) :")
       iterac += 1
       tiempoEjec = time() - self.__tiempoIni
       tiempoAviso = time() - tiempoAviso_ini
@@ -142,7 +143,7 @@ class TabuSearch(object):
   def agregaAListaTabu(self, add, drop):
     for d in drop:
       self.__permitidos_drop.remove(d)
-      self.__drop.append(Tabu(d, self.__tenureDROP))
+      self.__drop.append(Tabu(d, randint(1, self.__tenureDROP)))
     for a in add:
       self.__permitidos_add.remove(a)
-      self.__add.append(Tabu(a, self.__tenureADD))
+      self.__add.append(Tabu(a, randint(1, self.__tenureADD)))

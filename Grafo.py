@@ -295,6 +295,128 @@ class Grafo:
       return costo, secuencia, cand_a, cand_d
         # costo += self._mDist[secuencia[0].getValue()-1][secuencia[-1].getValue()-1]
 
+    def swap_3opt(self, permitidos_add: list, permitidos_drop: list):
+      # print("EMPIEZA ACA")
+      drop = []
+      add = []
+      secuencia = self._V
+      costo = self.__costoAsociado
+      # print(f"vertices: {self._V}")
+      lista_aristas = self.compara(self._A, permitidos_drop)
+      # print(f"lista_aristas: {lista_aristas}")
+      if len(lista_aristas) >= 3:
+        # print("ESTAMOS EN 3 OPT")
+        vertices = self._V
+        # print(f"vertices: {vertices}")
+        grado = len(vertices)
+        # print(f"permitidos_add: {permitidos_add}")
+        # print(f"permitidos_drop: {permitidos_drop}")
+        # print(f"lista_aristas: {lista_aristas}")
+        list_ind_v = list(range(grado))
+        encontradas = False
+        iter = 0
+        while not encontradas and len(list_ind_v)>0:
+          iter += 1
+          if iter > 10:
+            print("ESTANCADO 3opt")
+            iter = 0
+            # list_ind_v = []
+          ind = randint(0,len(list_ind_v)-1)
+          aux = [] # para ir guardando aristas de lista_aristas
+          ant = vertices[(list_ind_v[ind]-1)%grado]
+          med = vertices[list_ind_v[ind]]
+          # print(f"med vertice: {med}")
+          pos = vertices[(list_ind_v[ind]+1)%grado]
+          d1 = Arista(ant, med, self._mDist[ant.getValue()-1][med.getValue()-1])
+          d2 = Arista(pos, med, self._mDist[pos.getValue()-1][med.getValue()-1])
+          a1 = Arista(ant, pos, self._mDist[pos.getValue()-1][ant.getValue()-1])
+          if d1 in permitidos_drop and d2 in permitidos_drop and a1 in permitidos_add:
+            f1 = vertices[(list_ind_v[ind]-2)%grado]
+            f2 = vertices[(list_ind_v[ind]+2)%grado]
+            c1 = Arista(f1, ant, self._mDist[f1.getValue()-1][ant.getValue()-1])
+            c2 = Arista(f2, pos, self._mDist[f2.getValue()-1][pos.getValue()-1])
+            try:
+              aux.append(lista_aristas.pop(lista_aristas.index(c1)))
+            except:
+              pass
+              # print(f"{c1} no estaba en lista_aristas")
+              
+            try:
+              aux.append(lista_aristas.pop(lista_aristas.index(c2)))
+            except:
+              pass
+              # print(f"{c2} no estaba en lista_aristas")
+            while len(lista_aristas)>0 and not encontradas:
+              ind_a = randint(0,len(lista_aristas)-1)
+              d3 = lista_aristas[ind_a]
+              a2 = Arista(med, lista_aristas[ind_a].getOrigen(), self._mDist[med.getValue()-1][lista_aristas[ind_a].getOrigen().getValue()-1])
+              a3 = Arista(med, lista_aristas[ind_a].getDestino(), self._mDist[med.getValue()-1][lista_aristas[ind_a].getDestino().getValue()-1])
+              if d3 in permitidos_drop and a2 in permitidos_add and a3 in permitidos_add:
+                encontradas = True
+                drop.append(d1)
+                drop.append(d2)
+                drop.append(d3)
+                add.append(a1)
+                add.append(a2)
+                add.append(a3)
+                # print(f"list_ind_v[ind]: {list_ind_v[ind]}")
+                # print(f"add: {add}")
+                # print(f"drop: {drop}")    
+              else:
+                aux.append(lista_aristas.pop(ind_a))
+                # print(f"lista_aristas dentro while: {lista_aristas}")
+            if not encontradas:
+              lista_aristas = lista_aristas + aux
+              list_ind_v.pop(ind)
+          else:
+            # print("vertice no sirve, cambiando a otro")
+            lista_aristas = lista_aristas + aux
+            list_ind_v.pop(ind)
+            # ind = randint(0,len(list_ind_v)-1)
+        if encontradas:
+          secuencia = vertices[:]
+          v = secuencia.pop(list_ind_v[ind])
+          insert1 = secuencia.index(d3.getOrigen())
+          insert2 = secuencia.index(d3.getDestino())
+          if list_ind_v[ind] != 0:
+            if insert1 < insert2:
+              secuencia.insert(insert2,v)
+            else:
+              secuencia.insert(insert1,v)
+          else:
+            aux_l = []
+            aux_l.append(v)
+            if insert1 < insert2:
+              aux_l = aux_l + secuencia[insert2:]
+              aux_l = aux_l + secuencia[0:insert2]
+            else:
+              aux_l = aux_l + secuencia[insert1:]
+              aux_l = aux_l + secuencia[0:insert1]
+            secuencia = aux_l
+          
+          # print(f"costo: {costo}")
+          for a in drop:
+            costo -= a.getPeso()
+            # print(f"costo: {costo+a.getPeso()} - {a.getPeso()} = {costo}")
+          for a in add:
+            costo += a.getPeso()
+        else:
+          print("Se probaron todos los vértices sin éxito 3opt")
+          secuencia = vertices
+      else:
+        print("CUIDADO!! TENURE MUY ALTO 3opt")
+      
+      
+      # asd = self.calcCosto(secuencia)
+      # if costo != asd:
+      #   print(F"ERROR DE COSTO costo: {costo}, asd: {asd}")
+        # print(f"costo: {costo-a.getPeso()} + {a.getPeso()} = {costo}")
+      # print(f"costo final: {costo}")
+      # print(f"swap 3opt tarda: {fin} seg")
+      # print(f"secuencia: {secuencia}")
+      # print("FIN EJECUCIÓN 3opt")
+      return round(costo,2), secuencia, add, drop
+
     def mejoresIndices(self, solucion, lista_permit):
       mayorVerticeOrigen = 0
       iMin = 0
