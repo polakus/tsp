@@ -295,6 +295,24 @@ class Grafo:
       return costo, secuencia, cand_a, cand_d
         # costo += self._mDist[secuencia[0].getValue()-1][secuencia[-1].getValue()-1]
 
+    def en(self, a: Arista, aristas: list):
+      claves = [hash(a) for a in aristas]
+      dictA = dict(zip(claves,aristas))
+      h = hash(a)
+      hInverso = hash(a.getAristaInvertida())
+      try:
+        arista = dictA[h]
+      except KeyError:
+        arista = None
+      try:
+        aristaInv = dictA[hInverso]
+      except KeyError:
+        aristaInv = None
+      if arista is not None or aristaInv is not None:
+        return True
+      else:
+        return False
+    
     def swap_3opt(self, permitidos_add: list, permitidos_drop: list):
       # print("EMPIEZA ACA")
       drop = []
@@ -330,7 +348,7 @@ class Grafo:
           d1 = Arista(ant, med, self._mDist[ant.getValue()-1][med.getValue()-1])
           d2 = Arista(pos, med, self._mDist[pos.getValue()-1][med.getValue()-1])
           a1 = Arista(ant, pos, self._mDist[pos.getValue()-1][ant.getValue()-1])
-          if d1 in permitidos_drop and d2 in permitidos_drop and a1 in permitidos_add:
+          if self.en(d1, permitidos_drop) and self.en(d2, permitidos_drop) and self.en(a1, permitidos_add):
             f1 = vertices[(list_ind_v[ind]-2)%grado]
             f2 = vertices[(list_ind_v[ind]+2)%grado]
             c1 = Arista(f1, ant, self._mDist[f1.getValue()-1][ant.getValue()-1])
@@ -351,7 +369,7 @@ class Grafo:
               d3 = lista_aristas[ind_a]
               a2 = Arista(med, lista_aristas[ind_a].getOrigen(), self._mDist[med.getValue()-1][lista_aristas[ind_a].getOrigen().getValue()-1])
               a3 = Arista(med, lista_aristas[ind_a].getDestino(), self._mDist[med.getValue()-1][lista_aristas[ind_a].getDestino().getValue()-1])
-              if d3 in permitidos_drop and a2 in permitidos_add and a3 in permitidos_add:
+              if self.en(d3, permitidos_drop) and self.en(a2 , permitidos_add) and self.en(a3, permitidos_add):
                 encontradas = True
                 drop.append(d1)
                 drop.append(d2)
@@ -393,7 +411,7 @@ class Grafo:
               aux_l = aux_l + secuencia[insert1:]
               aux_l = aux_l + secuencia[0:insert1]
             secuencia = aux_l
-          
+
           # print(f"costo: {costo}")
           for a in drop:
             costo -= a.getPeso()
