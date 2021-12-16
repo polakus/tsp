@@ -44,8 +44,9 @@ class Arista(object):
             return Arista(self._destino, self._origen, self._peso)
     
     def __eq__(self, A):
-        return ((self.getOrigen() == A.getOrigen()) and (self.getDestino() == A.getDestino()) or ((self.getDestino() == A.getOrigen()) and (self.getOrigen() == A.getDestino())))
-
+        eq = ((self.getOrigen() == A.getOrigen()) and (self.getDestino() == A.getDestino())) or ((self.getOrigen() == A.getDestino()) and (self.getDestino() == A.getOrigen()))
+        return ((self.__class__ == A.__class__) and eq)
+        
     def __str__(self):
         return "(" + str(self._origen) + "," + str(self._destino) + "," + str(self._peso) + ")"
 

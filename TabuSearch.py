@@ -60,7 +60,7 @@ class TabuSearch(object):
     self.__soluciones.append(copy.deepcopy(g1)) #Agregar solución inicial
     self.__permitidos_add = g1.cargaAristas() # cargamos una lista de todas las aristas
     self.__permitidos_drop = copy.deepcopy(self.__permitidos_add)
-    self.__txt.escribir(str(g1))
+    # self.__txt.escribir(str(g1))
     self.__txt.escribir("------------------   DATOS INICIALES ----------------")
     self.__txt.escribir(f"Mejor encontrado (peso): {self.__optimo}")
     self.__txt.escribir(f"TenureADD: {self.__tenureADD}, TenureDROP: {self.__tenureDROP}")
@@ -75,75 +75,69 @@ class TabuSearch(object):
     tiempoAviso_max = float(10)
     tiempoAviso_ini = time()
     tiempoAviso = 0
-    # self.__txt.escribir(str(g1.getMatriz()))
-    # print(f"len(self.__aristas): {len(self.__aristas)}")
-    # print(f"vertices: {g1.getV()}")
-    # print(f"aristas: {g1.getA()}")
-    
-    # self.getArista2opt(add, drop, g1)
+
+    t_interc = self.__tiempoMaxEjec*0.03
+    ini_t_interc = time()
+    k_opt = 2
 
     while tiempoEjec < self.__tiempoMaxEjec:
       add = []
       drop = []
-      # ini = time()
-      costo, seq, add, drop = g1.swap_3opt(self.__permitidos_add, self.__permitidos_drop)
-      # print(f"swap2opt tarda: {time()-ini}")
-      # ini = time()
-      self.decrementaTenure(self.__add, True)
-      self.decrementaTenure(self.__drop, False)
+      if time() - ini_t_interc > t_interc and k_opt == 2:
+        k_opt = 3
+        ini_t_interc = time()
+        print(f"{int((tiempoEjec*100)/self.__tiempoMaxEjec)}% - ATENCIÓN: cabio a {k_opt}")
+      elif time() - ini_t_interc > t_interc and k_opt == 3:
+        k_opt = 2
+        ini_t_interc = time()
+        print(f"{int((tiempoEjec*100)/self.__tiempoMaxEjec)}% - ATENCIÓN: cambió a {k_opt}")
+      if k_opt == 2:
+        costo, seq, add, drop = g1.swap_2optV2(self.__add, self.__drop)
+      else:
+        costo, seq, add, drop = g1.swap_3optV2(self.__add, self.__drop)
+        
+      self.decrementaTenure(self.__add)
+      self.decrementaTenure(self.__drop)
       self.agregaAListaTabu(add,drop)
-      # print(f"actualiza listas tarda: {time()-ini}")
       if costo < self.__soluciones[-1].getCostoAsociado():
         g1.cargarDesdeSecuenciaDeVertices(seq)
+        self.__soluciones.append(copy.deepcopy(g1))
+        ini_t_interc = time()
         self.__txt.escribir(f"------------------   NUEVA SOLUCIÓN ENCONTRADA ----------------")
         self.__txt.escribir(str(g1.getV()))
         self.__txt.escribir(f"Costo Asociado: {g1.getCostoAsociado()}")
         self.__txt.escribir(f"Desviación: {round((g1.getCostoAsociado()*100)/self.__optimo,3)-100}%")
         self.__txt.escribir(f"Tiempo: {int(tiempoEjec/60)} min {int(tiempoEjec%60)} seg")
-        print(f"Costo asociado de nueva solución: {g1.getCostoAsociado()}")
-        self.__soluciones.append(copy.deepcopy(g1))
-      # else:
-      #   print(f"len(self.__add) :")
+        print(f"{int((tiempoEjec*100)/self.__tiempoMaxEjec)}% - Costo asociado de nueva solución: {g1.getCostoAsociado()}")
+        print(f"{int((tiempoEjec*100)/self.__tiempoMaxEjec)}% - Desviación: {round((g1.getCostoAsociado()*100)/self.__optimo,3)-100}% <---------------------------")
       iterac += 1
       tiempoEjec = time() - self.__tiempoIni
       tiempoAviso = time() - tiempoAviso_ini
       if tiempoAviso > tiempoAviso_max:
         tiempoAviso = 0
         tiempoAviso_ini = time()
-        print(f"Número de iteraciones: {iterac}. len(add): {len(self.__add)}, len(drop): {len(self.__drop)}  <---------------------")
-        print(f"len(permitidos_add): {len(self.__permitidos_add)} len(permitidos_drop): {len(self.__permitidos_drop)}")
-    # self.__txt.imprimir()
+        print(f"{int((tiempoEjec*100)/self.__tiempoMaxEjec)}% - Número de iteraciones: {iterac}. len(add): {len(self.__add)}, len(drop): {len(self.__drop)}")
+        print(f"{int((tiempoEjec*100)/self.__tiempoMaxEjec)}% - len(permitidos_add): {len(self.__permitidos_add)} len(permitidos_drop): {len(self.__permitidos_drop)}")
     print(f"optimo mejor solución: {self.__soluciones[-1].getCostoAsociado()}")
     print(f"len(self.__soluciones): {len(self.__soluciones)}")
     print(f"Número de iteraciones: {iterac}")
     self.__txt.escribir(f"Número de iteraciones: {iterac}")
     self.__txt.escribir(f"Tiempo total de ejecución: {int(tiempoEjec/60)} min {int(tiempoEjec%60)} seg")
     self.__txt.imprimir()
-    
 
-  def aristasConVertice(self, v):
-    aristas = []
-    for a in self.__aristas:
-      if a.getOrigen() == v or a.getDestino() == v:
-        aristas.append(a)
-    return aristas
-
-  def decrementaTenure(self, lista_tabu: list, add):
+  def decrementaTenure(self, lista_tabu: list):
     i=0
     while i < len(lista_tabu):
       lista_tabu[i].decrementaT()
       if(lista_tabu[i].getTenure()==0):
-        if add:
-          self.__permitidos_add.append(lista_tabu.pop(i).getElemento())
-        else:
-          self.__permitidos_drop.append(lista_tabu.pop(i).getElemento())
+        lista_tabu.pop(i)
       else:
         i+=1
 
   def agregaAListaTabu(self, add, drop):
     for d in drop:
-      self.__permitidos_drop.remove(d)
-      self.__drop.append(Tabu(d, randint(1, self.__tenureDROP)))
+      d.setTenure( randint(1,self.__tenureDROP))
+      self.__drop.append(d)
     for a in add:
-      self.__permitidos_add.remove(a)
-      self.__add.append(Tabu(a, randint(1, self.__tenureADD)))
+      a.setTenure( randint(1,self.__tenureADD))
+      self.__add.append(a)

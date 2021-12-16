@@ -81,7 +81,7 @@ for _ in range(5):
         matriz = leeInstancia(problem)
         os.remove(os.path.join(dir_local,instancia))
         print(f"ya leyó la instancia: {instancia}\nSe ejecutará {tam**(1/3)} y la instancia es de {tam} vertices")
-        TabuSearch(matriz, f"resultados_3optMOD4/ejec 1/{instancia}/{instancia}.rdos", "Vecino mas cercano", 3, "2-opt", int(tam**0.7),int(tam**0.7)+1, tam**(1/3), optimo)
+        TabuSearch(matriz, f"resultados_k_opt/ejec 1/{instancia}/{instancia}.rdos", "Vecino mas cercano", 3, "2-opt", int(tam**0.7),int(tam**0.7)+1, tam**(1/3), optimo)
 
 
 
